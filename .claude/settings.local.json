@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(where.exe node:*)",
+      "Bash(mkdir -p examples)",
+      "Bash(mv EXAMPLE_FUNNEL_PAGE.tsx examples/)",
+      "Bash(npm run:*)"
+    ]
+  }
+}
