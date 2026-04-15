@@ -12,7 +12,6 @@ import { useState } from 'react';
 import {
   FunnelShell,
   WerkgeverLeadForm,
-  KandidaatLeadForm,
   SuccessScreen,
 } from '@/components/funnel';
 

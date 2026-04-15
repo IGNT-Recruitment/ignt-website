@@ -1,69 +1,41 @@
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { createClient } from '@supabase/supabase-js';
 
-export async function createSupabaseServerClient() {
-  const cookieStore = await cookies();
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
-          } catch {
-            // Ignore errors from read-only cookies
-          }
-        },
-      },
-    }
-  );
+export const supabaseServer = createClient(supabaseUrl, supabaseServiceRoleKey, {
+  auth: {
+    autoRefreshToken: false,
+    persistSession: false,
+  },
+});
+
+export async function getLead(id: string) {
+  const { data, error } = await supabaseServer
+    .from('leads')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error) throw error;
+  return data;
 }
 
-export async function createSupabaseAdminClient() {
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return [];
-        },
-        setAll() {},
-      },
-    }
-  );
-}
+export async function createLead(leadData: {
+  type: 'werkgever' | 'kandidaat';
+  name: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  cv_url?: string;
+  answers: Record<string, string | string[]>;
+}) {
+  const { data, error } = await supabaseServer
+    .from('leads')
+    .insert([leadData])
+    .select()
+    .single();
 
-export type Database = {
-  public: {
-    Tables: {
-      leads: {
-        Row: {
-          id: string;
-          type: 'werkgever' | 'kandidaat';
-          name: string;
-          email: string;
-          phone?: string;
-          company?: string;
-          cv_url?: string;
-          answers: Record<string, string>;
-          created_at: string;
-        };
-        Insert: Omit<
-          Database['public']['Tables']['leads']['Row'],
-          'id' | 'created_at'
-        >;
-        Update: Partial<
-          Database['public']['Tables']['leads']['Insert']
-        >;
-      };
-    };
-  };
-};
+  if (error) throw error;
+  return data;
+}

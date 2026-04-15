@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [],
   },
-  webpack: (config, { isServer }) => {
+  webpack: (config) => {
     return config;
   },
 };

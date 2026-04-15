@@ -4,7 +4,9 @@
       "Bash(where.exe node:*)",
       "Bash(mkdir -p examples)",
       "Bash(mv EXAMPLE_FUNNEL_PAGE.tsx examples/)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(vercel link:*)",
+      "WebFetch(domain:ignt-website.vercel.app)"
     ]
   }
 }

@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #0A0E27;
+  --bg-secondary: #1A1F3A;
+  --bg-tertiary: #0F1429;
+  --accent-purple: #7C3AED;
+  --accent-magenta: #D946EF;
+  --text-primary: #FFFFFF;
+  --text-secondary: #A0AEC0;
+  --text-tertiary: #718096;
+  --gradient-primary: linear-gradient(135deg, #7C3AED, #D946EF);
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.3);
+  --glow-purple: 0 0 20px rgba(124, 58, 237, 0.6);
+  --glow-magenta: 0 0 30px rgba(217, 70, 239, 0.5);
+  --glow-intense: 0 0 40px rgba(124, 58, 237, 0.8);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-bg-primary text-text-primary;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+      "Helvetica Neue", sans-serif;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold leading-tight;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl font-bold leading-tight;
+  }
+
+  h3 {
+    @apply text-2xl font-semibold leading-tight;
+  }
+}

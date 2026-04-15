@@ -1,22 +1,29 @@
-'use client';
+import { createClient } from '@supabase/supabase-js';
 
-import { createBrowserClient } from '@supabase/ssr';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-let supabaseClient: ReturnType<typeof createBrowserClient> | null = null;
+export const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
-export function getSupabaseBrowserClient() {
-  if (supabaseClient) {
-    return supabaseClient;
-  }
+export async function getSignedUploadUrl(fileName: string) {
+  const { data, error } = await supabaseClient
+    .storage
+    .from('cv-uploads')
+    .createSignedUploadUrl(`/${Date.now()}-${fileName}`);
 
-  supabaseClient = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
-
-  return supabaseClient;
+  if (error) throw error;
+  return data;
 }
 
-export function useSupabaseClient() {
-  return getSupabaseBrowserClient();
+export async function uploadFile(url: string, file: File) {
+  const response = await fetch(url, {
+    method: 'PUT',
+    body: file,
+    headers: {
+      'Content-Type': file.type,
+    },
+  });
+
+  if (!response.ok) throw new Error('Failed to upload file');
+  return response;
 }
